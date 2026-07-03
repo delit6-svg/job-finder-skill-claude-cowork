@@ -6,9 +6,21 @@ The search, filtering, and scheduling happen **in the chat**: you point it at yo
 
 ---
 
+## Automated file install (optional)
+
+Before setting up in the chat, you can stage all of the skill's files into the Claude scheduler root
+with the installer — it also checks Python + `openpyxl` for you:
+
+- **Windows:** `powershell -ExecutionPolicy Bypass -File installation\install.ps1`
+- **macOS:** `bash installation/install.sh`
+
+It creates `~/Claude/Scheduled/<taskId>/` (default `daily-job-search`) with `SKILL.md`,
+`seen-jobs.json` (preserved if it already exists), `.scripts/`, and the extracted `build_shortlist.py`.
+It does **not** register the schedule — do that in Cowork below. See `README.md` for details.
+
 ## Setup (2 minutes)
 
-1. Open **`job-search-setup.md`** and copy the prompt inside the code box.
+1. Open **`mutation/SKILL.md`** and copy the prompt inside the code box.
 2. Open Claude **Cowork** and paste it into the chat.
 3. Claude asks you a few questions right there in the chat (name, CV or keywords, location, employment types, seniority, delivery, schedule). If you choose CV, you **upload it in the chat** and Claude reads it.
 4. Claude writes the embedded renderer (`build_shortlist.py`) into the task folder and registers the task. Done — it now appears in your **Scheduled** sidebar and runs on your chosen schedule.

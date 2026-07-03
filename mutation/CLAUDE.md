@@ -9,6 +9,7 @@ Project instructions for the users.
 Installation files required for the initial installation. Each user runs this once.
 
 - **`PROMPT.md`** — Claude Cowork instructions used to create the scheduler and the initial configuration.
+- **`install.ps1`** / **`install.sh`** — Cross-platform file installers (Windows / macOS). They detect the Claude Desktop scheduler root (`~/Claude/Scheduled`, falling back to `~/Documents/claude/Scheduled`, else created), verify Python + `openpyxl`, and stage the skill into `<schedulerRoot>/<taskId>/` (default `daily-job-search`): `SKILL.md`, `seen-jobs.json` (preserved if it already exists), `.scripts/`, and `build_shortlist.py` extracted from `SKILL.md`'s `RENDERER SCRIPT` block. They only stage files — registering the scheduled task still happens inside Cowork (`create_scheduled_task`, per `SKILL.md` STEP 4).
 
 ## `configuration/`
 Configuration files that don't change after installation (user config files).
