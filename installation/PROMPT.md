@@ -1,95 +1,56 @@
-# Cowork Job-Shortlist Assistant (Israel)
+# Job-Shortlist skill — automated install for Claude Cowork
 
-Turn Claude **Cowork** into a recurring job-shortlist assistant for the Israeli market — for **any profession** (IT, teaching, HR, legal, and more). It searches Israeli job boards, filters by employment type and seniority, dedupes against what you've already seen, learns from your feedback, and drops a color-coded Excel file with a **Status** dropdown on your Desktop — on the schedule you choose.
+**You are Claude Cowork and you have just been handed this skill bundle. Follow this
+file top to bottom. Run the INSTALL section FULLY AUTOMATICALLY — do NOT ask me any
+questions, and do NOT stop for confirmation, until you reach CONFIGURE.**
 
-The search, filtering, and scheduling happen **in the chat**: you point it at your **CV** (Claude reads it and figures out what to search for) or just type keywords, answer a few questions, and it schedules itself. The one moving part that used to be inconsistent — building the Excel — is now handled by a small deterministic renderer that's **embedded in the setup prompt** (Claude writes it into your task folder during setup), so every run produces the **exact same format**. It supports full-time, part-time, hourly, **temporary (עבודה זמנית)**, **project/freelance (פרויקט)**, and **one-off/gig (עבודה חד פעמית)** roles.
+**Executing commands:** whenever a step below needs a command run, run it YOURSELF via
+computer use — pick the "Try via computer use" path automatically and proceed. Never ask
+me how the install step should be handled or which method to use; just do it.
 
----
+## What this is
 
-## Automated file install (optional)
+A recurring job-shortlist assistant for the Israeli job market. Installing it stages a
+small skill into the Claude scheduler folder and registers a scheduled task that drops a
+color-coded Excel shortlist (`Job-Shortlist-YYYY-MM-DD.xlsx`) on the schedule I choose.
 
-Before setting up in the chat, you can stage all of the skill's files into the Claude scheduler root
-with the installer — it installs Python if missing and checks `openpyxl` for you:
+## INSTALL — do this now, automatically, with no questions
 
-- **Windows:** `powershell -ExecutionPolicy Bypass -File installation\dependency-install.ps1`
-- **macOS:** `bash installation/dependency-install.sh`
+The installer scripts sit in this same folder, right next to this `PROMPT.md`. The rest
+of the skill lives under `repo/`. The installer reads from `repo/` on its own — you do
+not need to touch it.
 
-It creates `~/Claude/Scheduled/<taskId>/` (default `daily-job-search`) with `SKILL.md`,
-`seen-jobs.json` (preserved if it already exists), `.scripts/`, and the extracted `build_shortlist.py`.
-It does **not** register the schedule — do that in Cowork below. See `README.md` for details.
+1. If you are still looking at the `.7z` file, extract it first and work from the
+   extracted folder (everything below is relative to it).
+2. Run the bootstrapper for this machine's operating system from this folder, yourself
+   via computer use (do not ask me how — just run it). Use the default task id
+   `daily-job-search` (pass no task-id argument):
+   - **Windows:** `powershell -ExecutionPolicy Bypass -File dependency-install.ps1`
+   - **macOS / Linux:** `bash dependency-install.sh`
 
-## Setup (2 minutes)
+   It installs Python if missing, ensures `openpyxl`, and stages the skill into the
+   Claude scheduler folder at `<scheduler>/daily-job-search/` (`SKILL.md`,
+   `build_shortlist.py`, `.scripts/`, and `seen-jobs.json`). This step is mechanical —
+   run it to completion without pausing for input.
+3. Confirm the installer printed `Done.` and that
+   `<scheduler>/daily-job-search/build_shortlist.py` now exists. If it failed, fix the
+   reported problem (e.g. install Python, or extract the archive) and run it again —
+   still without asking me.
 
-1. Open **`mutation/SKILL.md`** and copy the prompt inside the code box.
-2. Open Claude **Cowork** and paste it into the chat.
-3. Claude asks you a few questions right there in the chat (name, CV or keywords, location, employment types, seniority, delivery, schedule). If you choose CV, you **upload it in the chat** and Claude reads it.
-4. Claude writes the embedded renderer (`build_shortlist.py`) into the task folder and registers the task. Done — it now appears in your **Scheduled** sidebar and runs on your chosen schedule.
+## CONFIGURE — only after INSTALL succeeded, now talk to me
 
-To change it later, just tell Claude in the chat (e.g. *"make my job search weekdays at 8am"* or *"pause it"*).
+The skill is now staged under the task id **`daily-job-search`**. Open the staged setup
+prompt at `<scheduler>/daily-job-search/SKILL.md` and follow its STEP 1 through STEP 4 to
+configure and register the scheduled task.
 
-> **Why a renderer script:** each scheduled run only gathers jobs and writes a `jobs.json`; the renderer turns that JSON into the styled `.xlsx` the same way every time. That's what keeps the banner, colors, columns, and Status dropdown identical from run to run instead of drifting. The script ships inside `job-search-setup.md`, so there are still just two files.
+- Reuse the existing `daily-job-search` folder and task id — the files are ALREADY
+  staged there, so do NOT re-stage them and do NOT ask me to pick a new task id.
+- This is the point where you ask me how the job search should be configured: my name,
+  whether to read my CV or use typed keywords, my location in Israel, which employment
+  types to include, seniority, delivery (Desktop / Drive / email), and the schedule.
+  Ask a few at a time using the in-chat question UI.
+- When I've answered, register the task with `create_scheduled_task` under the id
+  `daily-job-search`.
 
----
-
-## Examples
-
-- **Teacher:** upload CV *or* keywords `מורה, morah, homeroom teacher`; location `Haifa`; types `Full-time salaried, Temporary`; seniority `any`; daily 9am.
-- **Lawyer:** CV; types `Full-time salaried, Project/Freelance`; seniority `mid`; weekdays 8am.
-- **HR:** keywords `HR, גיוס, recruiter, HRBP`; types `Full-time salaried`.
-- **Gig / one-off:** keywords `הקמת אתר, logo design, translation`; types `Project/Freelance, One-off/Gig`.
-
----
-
-## What each run produces
-
-- `Job-Shortlist-YYYY-MM-DD.xlsx` on your Desktop — navy banner, subtitle with date + per-bucket counts, per-bucket color bands with light/dark row striping, a **Status** dropdown (To apply / ✅ Sent / 💬 Interviewing / ❌ Didn't apply / 🚫 Rejected / ⏳ No response), and clickable "Open ↗" links.
-- A `jobs.json` (the run's data + backup) and a `seen-jobs.json` so you never see the same listing twice.
-- Optional: also upload the same file to Google Drive or email it (if you chose that during setup).
-
-The next run reads your Status marks and **soft-ranks** more of what you applied to and less of what you skipped — it never hides options, and it only changes the row order, never the format.
-
----
-
-## The renderer (embedded in `job-search-setup.md`)
-
-The renderer is a small Python script kept inside the setup prompt; during setup Claude writes it to your task folder as `build_shortlist.py`. It reads a JSON file of jobs and writes the styled `.xlsx`, and needs Python with `openpyxl` (`pip install openpyxl`). You can also run it by hand:
-
-```
-python build_shortlist.py jobs.json            # writes Job-Shortlist-<date>.xlsx to your Desktop
-python build_shortlist.py jobs.json out.xlsx   # or an explicit output path
-```
-
-`jobs.json` shape:
-
-```json
-{
-  "name": "Daniel Franko",
-  "date": "2026-06-24",
-  "output_dir": "C:\\Users\\me\\Desktop",
-  "jobs": [
-    { "status": "To apply", "bucket": "B1 Help Desk", "title": "…",
-      "company": "…", "location": "Tel Aviv", "source": "Indeed",
-      "tag": "L1 service desk", "exp": "no exp", "link": "https://…" }
-  ]
-}
-```
-
-Only `name`, `bucket`, and `title` are required per the schema; everything else is optional. Buckets are auto-assigned colors from a fixed palette in first-seen order, so any profession's groups render consistently. Given the same `jobs.json`, the output format is identical every time.
-
----
-
-## Notes & limits
-
-- Scheduled tasks run **while the Cowork app is open**. If it's closed when a task is due, it runs on next launch.
-- **Shortlist only** — it reads public listings and never applies, logs in, or submits anything on your behalf.
-- Tuned for **Israeli** boards (AllJobs, Drushim, JobMaster, LinkedIn IL, Indeed IL, Glassdoor IL, and sector boards) in Hebrew and English.
-
-## Files in this repo
-
-- `job-search-setup.md` — the prompt you paste into Cowork (the deterministic Excel renderer is embedded inside it).
-- `README.md` — this file.
-- `LICENSE` — MIT.
-
-## License
-
-MIT — see `LICENSE`.
+**In short: install silently and automatically, then ask me only the questions needed to
+configure what jobs to find.**
