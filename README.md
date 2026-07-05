@@ -1,7 +1,7 @@
 # Israel Job-Shortlist — Claude Cowork skill
 
 A recurring **job-shortlist assistant** for the Israeli market (any profession). On your chosen
-schedule it searches Israeli boards (Hebrew + English), hard-filters by employment type and
+schedule it searches Israeli boards (Hebrew + English), hard-filters by employment type, and
 seniority, dedupes against listings you've already seen, soft-ranks by your own feedback, and drops
 a color-coded `Job-Shortlist-YYYY-MM-DD.xlsx` (with a **Status** dropdown) on your Desktop.
 
