@@ -1,0 +1,5 @@
+# Built archives from build-archive.ps1
+dist/
+
+# Local files
+*.local.*

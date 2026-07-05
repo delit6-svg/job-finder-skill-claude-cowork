@@ -9,10 +9,10 @@ The search, filtering, and scheduling happen **in the chat**: you point it at yo
 ## Automated file install (optional)
 
 Before setting up in the chat, you can stage all of the skill's files into the Claude scheduler root
-with the installer — it also checks Python + `openpyxl` for you:
+with the installer — it installs Python if missing and checks `openpyxl` for you:
 
-- **Windows:** `powershell -ExecutionPolicy Bypass -File installation\install.ps1`
-- **macOS:** `bash installation/install.sh`
+- **Windows:** `powershell -ExecutionPolicy Bypass -File installation\dependency-install.ps1`
+- **macOS:** `bash installation/dependency-install.sh`
 
 It creates `~/Claude/Scheduled/<taskId>/` (default `daily-job-search`) with `SKILL.md`,
 `seen-jobs.json` (preserved if it already exists), `.scripts/`, and the extracted `build_shortlist.py`.

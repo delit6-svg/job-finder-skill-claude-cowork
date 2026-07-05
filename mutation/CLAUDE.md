@@ -9,7 +9,8 @@ Project instructions for the users.
 Installation files required for the initial installation. Each user runs this once.
 
 - **`PROMPT.md`** — Claude Cowork instructions used to create the scheduler and the initial configuration.
-- **`install.ps1`** / **`install.sh`** — Cross-platform file installers (Windows / macOS). They detect the Claude Desktop scheduler root (`~/Claude/Scheduled`, falling back to `~/Documents/claude/Scheduled`, else created), verify Python + `openpyxl`, and stage the skill into `<schedulerRoot>/<taskId>/` (default `daily-job-search`): `SKILL.md`, `seen-jobs.json` (preserved if it already exists), `.scripts/`, and `build_shortlist.py` extracted from `SKILL.md`'s `RENDERER SCRIPT` block. They only stage files — registering the scheduled task still happens inside Cowork (`create_scheduled_task`, per `SKILL.md` STEP 4).
+- **`dependency-install.ps1`** / **`dependency-install.sh`** — Thin per-OS bootstrappers (Windows / macOS · Linux). Their only job is the one thing a Python script can't do for itself: install Python if it's missing (Windows: winget; macOS: Homebrew; else a python.org link), then hand off to `install.py`, forwarding an optional task-id.
+- **`install.py`** — The shared, cross-platform installer with all the real staging logic. It detects the Claude Desktop scheduler root (`~/Claude/Scheduled`, falling back to `~/Documents/claude/Scheduled`, else created), ensures `openpyxl`, and stages the skill into `<schedulerRoot>/<taskId>/` (default `daily-job-search`): `SKILL.md`, `seen-jobs.json` (preserved if it already exists), `.scripts/`, and `build_shortlist.py` extracted from `SKILL.md`'s `RENDERER SCRIPT` block. It only stages files — registering the scheduled task still happens inside Cowork (`create_scheduled_task`, per `SKILL.md` STEP 4).
 
 ## `configuration/`
 Configuration files that don't change after installation (user config files).

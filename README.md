@@ -11,33 +11,38 @@ embedded in `SKILL.md`) keeps every run's Excel format identical.
 
 ## Install
 
-The installer stages the skill into the Claude Desktop **scheduler root** and checks that Python
+The installer stages the skill into the Claude Desktop **scheduler root** and makes sure Python
 (with `openpyxl`) is available for the helper scripts. It does **not** register the schedule — that
 last step happens inside Cowork.
+
+Each OS has a thin bootstrapper that installs Python if it's missing, then runs the shared
+cross-platform installer (`installation/install.py`).
 
 **Windows** (PowerShell):
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File installation\install.ps1
+powershell -ExecutionPolicy Bypass -File installation\dependency-install.ps1
 ```
 
 **macOS** (Terminal):
 
 ```bash
-bash installation/install.sh
+bash installation/dependency-install.sh
 ```
 
 Optional: pass a task-id to name the task folder (default `daily-job-search`):
-`install.ps1 -TaskId my-search` / `install.sh my-search`.
+`dependency-install.ps1 -TaskId my-search` / `dependency-install.sh my-search`.
 
 What it does:
 
-1. Finds the scheduler root — `~/Claude/Scheduled`, else `~/Documents/claude/Scheduled`, else creates
+1. Installs Python ≥ 3.8 if it's missing (Windows: winget; macOS: Homebrew), falling back to a
+   download link if it can't.
+2. Finds the scheduler root — `~/Claude/Scheduled`, else `~/Documents/claude/Scheduled`, else creates
    `~/Claude/Scheduled`.
-2. Verifies Python ≥ 3.8 and installs `openpyxl` if missing (prints guidance if Python is absent).
-3. Stages `<schedulerRoot>/<taskId>/` with `SKILL.md`, `seen-jobs.json` (kept if it already exists,
+3. Installs `openpyxl` if missing.
+4. Stages `<schedulerRoot>/<taskId>/` with `SKILL.md`, `seen-jobs.json` (kept if it already exists,
    so your dedupe history survives re-installs), `.scripts/`, and `build_shortlist.py`.
-4. Runs quick smoke tests (`dedupe.py selftest` and a sample render).
+5. Runs quick smoke tests (`dedupe.py selftest` and a sample render).
 
 ## Finish setup in Cowork
 
