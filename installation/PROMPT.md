@@ -46,9 +46,16 @@ configure and register the scheduled task.
 - Reuse the existing `daily-job-search` folder and task id — the files are ALREADY
   staged there, so do NOT re-stage them and do NOT ask me to pick a new task id.
 - This is the point where you ask me how the job search should be configured: my name,
-  whether to read my CV or use typed keywords, my location in Israel, which employment
-  types to include, seniority, delivery (Desktop / Drive / email), and the schedule.
-  Ask a few at a time using the in-chat question UI.
+  whether to read my CV or use typed keywords, my location, which employment types to
+  include, seniority, delivery (Desktop / Drive / email), and the schedule. Ask a few at
+  a time using the in-chat question UI.
+- **Location** must be asked as a choice of exactly these options — do not use free-text
+  cities: **North**, **Center**, **South**, **All**.
+- **CV handling:** never automatically send, upload, attach, or re-transmit my CV
+  anywhere. If I choose the CV option, read it ONCE now to derive Hebrew + English search
+  keywords and **bake those keywords directly into the scheduled task prompt** — the
+  scheduled runs must run from the baked-in keywords and must never carry, open, or send
+  the CV file.
 - When I've answered, register the task with `create_scheduled_task` under the id
   `daily-job-search`.
 
